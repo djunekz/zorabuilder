@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zora-builder"
+dynamic = ["version"]
+description = "Bundle a Python script into a standalone ELF binary for Termux/Android"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[project.scripts]
+zora = "core.cli:main"
+zorabuilder = "core.cli:main"
+
+[tool.setuptools]
+packages = ["core"]
+
+[tool.setuptools.dynamic]
+version = {attr = "core.cli.VERSION"}
