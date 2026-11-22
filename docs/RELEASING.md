@@ -25,14 +25,20 @@ Some workflows need GitHub features that are switched off by default. Enable the
 | Actions: read and write permissions for releases | Settings, Actions, General, Workflow permissions | `release.yml` publishes through its own `contents: write` permission, so the default read-only setting is fine; only change it if your organization overrides workflow permissions |
 | Branch protection on `main` | Settings, Branches | Require the CI jobs (`Lint`, `Shell scripts`, `Tests`, `Package install`) before merging |
 
-### If Dependency review fails with "Forbidden"
+### If Dependency review reports "skipped"
 
-The action calls GitHub's dependency graph API and reports an HTTP 403 as `Forbidden` (older versions word it as "Dependency review is not supported on this repository"). Work through these in order:
+Before it runs the review, the job asks GitHub's dependency graph API for the diff of the pull request and prints the answer. If GitHub does not answer with HTTP 200, the review is skipped and the job ends with a warning annotation that names the HTTP status and GitHub's message, instead of failing the pull request.
 
-1. Open `https://github.com/djunekz/zorabuilder/settings/security_analysis` and confirm **Dependency graph** shows as enabled. If you see an **Enable** button, press it.
-2. Re-run the job after a few minutes; a freshly enabled graph can take a moment to become available.
-3. Check the same job on a pull request opened by a person, not by Dependabot. Runs triggered by `dependabot[bot]` get a restricted token, so the workflow treats that job as best-effort (`continue-on-error`) for Dependabot pull requests only. Pull requests from people stay strict.
-4. If it still fails for a pull request from a person, open the run's **Annotations** and read the warning next to the error; it names the exact missing permission or setting.
+Open the job, read the annotation, and use this table:
+
+| Annotation says | Usually means | What to do |
+| --------------- | ------------- | ---------- |
+| `HTTP 403` and "Resource not accessible by integration" | The workflow token is not allowed to read the dependency graph; common for runs started by Dependabot | Check the job's `permissions`; try the same check on a pull request opened by a person |
+| `HTTP 403` with another message | Dependency graph is switched off | Open `https://github.com/djunekz/zorabuilder/settings/security_analysis`, enable **Dependency graph**, then re-run |
+| `HTTP 404` | The graph has not finished indexing the commits | Wait a few minutes and re-run |
+| `HTTP 000` | The runner could not reach `api.github.com` | Re-run |
+
+When the status is 200, the real review runs and fails the pull request on findings of moderate severity or higher.
 
 ## Checklist
 
