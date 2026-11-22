@@ -12,6 +12,19 @@ Maintainer guide. Releases follow [Semantic Versioning](https://semver.org): `MA
 
 The version lives in one place: `VERSION` in `core/cli.py`. `pyproject.toml` reads it, and the release workflow checks that the git tag matches it.
 
+## One-time repository setup
+
+Some workflows need GitHub features that are switched off by default. Enable them once under **Settings**:
+
+| Setting | Where | Needed by |
+| ------- | ----- | --------- |
+| Dependency graph | Settings, Advanced Security (or Code security), Dependency graph | `dependency-review.yml`; without it the job fails with "Dependency review is not supported on this repository" |
+| Dependabot alerts | Same page | Security updates, and the PRs from `dependabot.yml` |
+| Private vulnerability reporting | Same page | The report link in [SECURITY.md](../SECURITY.md) |
+| Code scanning | Same page; CodeQL uploads results by itself | `codeql.yml` |
+| Actions: read and write permissions for releases | Settings, Actions, General, Workflow permissions | `release.yml` publishes through its own `contents: write` permission, so the default read-only setting is fine; only change it if your organization overrides workflow permissions |
+| Branch protection on `main` | Settings, Branches | Require the CI jobs (`Lint`, `Shell scripts`, `Tests`, `Package install`) before merging |
+
 ## Checklist
 
 1. **Make sure `main` is green.** CI passes, and the end-to-end tests ran (not skipped).

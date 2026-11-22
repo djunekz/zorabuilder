@@ -40,6 +40,9 @@ class StubTests(unittest.TestCase):
         self.assertNotIn("config.site_import", self.stub())
         self.assertIn(ISOLATED_BLOCK.strip(), self.stub(isolated=True))
 
+    def test_gnu_source_definition_matches_python_headers(self):
+        self.assertTrue(self.stub().startswith("#ifndef _GNU_SOURCE\n#define _GNU_SOURCE 1\n#endif\n"))
+
     def test_disables_python_argv_parsing(self):
         self.assertIn("config.parse_argv = 0;", self.stub())
 
