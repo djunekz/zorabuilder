@@ -1,0 +1,45 @@
+import re
+import unittest
+
+from tests.helpers import ROOT
+
+LABELS = ROOT / ".github" / "labels.yml"
+WORKFLOWS = ROOT / ".github" / "workflows"
+
+
+class LabelConfigTests(unittest.TestCase):
+    def test_every_color_is_a_quoted_hex_string(self):
+        lines = [line for line in LABELS.read_text().splitlines() if line.strip().startswith("color:")]
+        self.assertGreater(len(lines), 0)
+        for line in lines:
+            self.assertRegex(line.strip(), r'^color: "[0-9a-fA-F]{6}"$', line)
+
+    def test_label_names_are_unique(self):
+        names = re.findall(r"^- name: (.+)$", LABELS.read_text(), flags=re.M)
+        self.assertEqual(len(names), len(set(names)))
+
+    def test_descriptions_fit_github_limit(self):
+        for description in re.findall(r"^\s+description: (.+)$", LABELS.read_text(), flags=re.M):
+            self.assertLessEqual(len(description), 100, description)
+
+
+class WorkflowConfigTests(unittest.TestCase):
+    def test_python_versions_are_quoted(self):
+        text = (WORKFLOWS / "ci.yml").read_text()
+        match = re.search(r"python-version: \[(.+)\]", text)
+        self.assertIsNotNone(match)
+        for item in match.group(1).split(","):
+            self.assertRegex(item.strip(), r'^"3\.\d+"$')
+
+    def test_every_workflow_declares_permissions(self):
+        for workflow in sorted(WORKFLOWS.glob("*.yml")):
+            self.assertRegex(workflow.read_text(), r"(?m)^permissions:", workflow.name)
+
+    def test_every_workflow_job_has_a_timeout(self):
+        for workflow in sorted(WORKFLOWS.glob("*.yml")):
+            text = workflow.read_text()
+            self.assertEqual(text.count("runs-on:"), text.count("timeout-minutes:"), workflow.name)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -32,7 +32,7 @@ and this project adheres to semantic versioning.
 - `examples/` - `app.py` and `multi_module/` demo programs used by the docs and the tests
 - `.github/ISSUE_TEMPLATE/` - issue forms for bug reports, build failures, feature requests and documentation problems, plus `config.yml` with contact links
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/CODEOWNERS`, `.github/dependabot.yml`, `.github/labeler.yml`, `.github/labels.yml`, `.github/release.yml` - repository automation and templates
-- `.github/workflows/ci.yml` - lint, shell script checks with an install/uninstall smoke test, tests on Python 3.10 to 3.13, and a packaging check
+- `.github/workflows/ci.yml` - lint, shell script checks with an install/uninstall smoke test, tests on Python 3.10 to 3.14, and a packaging check
 - `.github/workflows/codeql.yml`, `dependency-review.yml`, `labeler.yml`, `labels-sync.yml`, `stale.yml` - code scanning, dependency review, PR labeling, label sync and stale issue handling
 - `.github/workflows/release.yml` - verifies the tag against `VERSION`, runs the tests, builds distributions with `SHA256SUMS`, and publishes a GitHub Release using the matching CHANGELOG section
 - `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `ACCESSIBILITY.md`, `GOVERNANCE.md`, `PRIVACY.md` - community and policy documents
@@ -40,6 +40,7 @@ and this project adheres to semantic versioning.
 - `.gitignore`, `.gitattributes`, `.editorconfig` - repository hygiene
 - `pyproject.toml` - project metadata (authors, keywords, classifiers, URLs), `dev` extra and ruff configuration
 - `LICENSE` - MIT license (Copyright (c) 2026 djunekz)
+- `tests/test_repo_config.py` - guards the repository configuration: quoted label colors, unique label names, quoted Python versions in CI, and permissions and timeouts in every workflow
 - `scripts/termux-check.sh` - device check that runs the release checklist on Termux or any Linux: environment, test suite, install, builds, argument pass-through, exit codes, Ctrl+C handling, temp file cleanup, reinstall and uninstall, with a PASS/FAIL summary and exit status
 - `CODE_OF_CONDUCT.md`, `SECURITY.md`, `SUPPORT.md`, `GOVERNANCE.md` - private contact by email for security reports and conduct concerns
 - `CHANGELOG.md` - this file
@@ -61,6 +62,7 @@ and this project adheres to semantic versioning.
 - `core/compiler.py` - the binary is compiled in a temp folder and moved to the output only on success
 - `core/codegen.py` - the real ZIP size is embedded in the C loader at build time
 - `core/config.py` - `bundle_stdlib` renamed to `bundle_deps`
+- `pyproject.toml` - Python 3.14 classifier (verified on Termux, aarch64, Python 3.14.10 with clang 21.1.8)
 - `pyproject.toml` - declares the MIT license and includes the LICENSE file in distributions
 - `pyproject.toml` - single version source: `core.cli.VERSION` (previously `pyproject` said 3.1.0 vs 2.0.0 in the code)
 - `pyproject.toml` - explicit `packages = ["core"]`
@@ -73,6 +75,8 @@ and this project adheres to semantic versioning.
 - `core/codegen.py` - overly long temp paths were silently truncated; they are now checked
 - `core/codegen.py` - an unwritable or missing `TMPDIR` now falls back to `/tmp`
 - `core/codegen.py` - missing NULL checks on C API calls; all are checked now and init errors show the cause
+- `.github/labels.yml` - the `stale` label color `795548` was read as a number, which made the label sync workflow fail; all colors are now quoted strings
+- `core/codegen.py` - the generated C source produced a `_GNU_SOURCE` redefinition warning with the Python 3.10 headers; it is now defined as `1` behind an `#ifndef` guard, which is silent with every Python version
 - `core/codegen.py` - Ctrl+C could not be caught by the script: the loader installed its own `SIGINT` handler before Python started, which stopped Python from installing its handler, so `except KeyboardInterrupt`, `finally` blocks and `atexit` callbacks never ran. `SIGINT` is now handed to Python, an uncaught `KeyboardInterrupt` exits with 130, and signals inherited as ignored (for example in background jobs) stay ignored
 - `core/cli.py` - `zorabuilder app.py app.py` overwrote the source script with an ELF
 - `core/cli.py` - the banner always printed `Mode: Full Bundle` even with `--no-bundle`
