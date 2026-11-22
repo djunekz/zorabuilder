@@ -25,6 +25,15 @@ Some workflows need GitHub features that are switched off by default. Enable the
 | Actions: read and write permissions for releases | Settings, Actions, General, Workflow permissions | `release.yml` publishes through its own `contents: write` permission, so the default read-only setting is fine; only change it if your organization overrides workflow permissions |
 | Branch protection on `main` | Settings, Branches | Require the CI jobs (`Lint`, `Shell scripts`, `Tests`, `Package install`) before merging |
 
+### If Dependency review fails with "Forbidden"
+
+The action calls GitHub's dependency graph API and reports an HTTP 403 as `Forbidden` (older versions word it as "Dependency review is not supported on this repository"). Work through these in order:
+
+1. Open `https://github.com/djunekz/zorabuilder/settings/security_analysis` and confirm **Dependency graph** shows as enabled. If you see an **Enable** button, press it.
+2. Re-run the job after a few minutes; a freshly enabled graph can take a moment to become available.
+3. Check the same job on a pull request opened by a person, not by Dependabot. Runs triggered by `dependabot[bot]` get a restricted token, so the workflow treats that job as best-effort (`continue-on-error`) for Dependabot pull requests only. Pull requests from people stay strict.
+4. If it still fails for a pull request from a person, open the run's **Annotations** and read the warning next to the error; it names the exact missing permission or setting.
+
 ## Checklist
 
 1. **Make sure `main` is green.** CI passes, and the end-to-end tests ran (not skipped).
