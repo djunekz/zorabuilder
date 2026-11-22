@@ -55,7 +55,7 @@ class ExampleTests(TempDirTestCase):
 | --- | ------------ |
 | Lint | `ruff check .` and byte-compilation |
 | Shell scripts | `bash -n` and ShellCheck on all scripts, and an install, reinstall and uninstall smoke test |
-| Tests | The full suite on Python 3.10, 3.11, 3.12 and 3.13, then the device check (`scripts/termux-check.sh`) |
+| Tests | The full suite on Python 3.10, 3.11, 3.12, 3.13 and 3.14, then the device check (`scripts/termux-check.sh`) |
 | Package install | Builds the wheel, installs it into a clean virtualenv and runs `zorabuilder --version` |
 
 Other workflows: CodeQL analysis, dependency review on pull requests, label automation, stale issue handling and the release pipeline. See [RELEASING.md](RELEASING.md).
