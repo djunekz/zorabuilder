@@ -3,7 +3,7 @@ requires = ["setuptools>=65"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "zora-builder"
+name = "zorabuilder"
 dynamic = ["version"]
 description = "Bundle a Python script into a standalone ELF binary for Termux/Android"
 readme = "README.md"
