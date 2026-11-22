@@ -9,7 +9,7 @@ and this project adheres to semantic versioning.
 
 ---
 
-## [v2.1.0] - 2026-11-21
+## [v2.1.0] - 2026-11-23
 
 ### Added
 - `core/cli.py` - new `--version` option
