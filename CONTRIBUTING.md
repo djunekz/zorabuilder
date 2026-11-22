@@ -85,7 +85,7 @@ Common types: `feat`, `fix`, `docs`, `test`, `refactor`, `ci`, `chore`. Mark bre
 - One logical change per PR. Large PRs are hard to review and slow to merge.
 - Explain **why** the change is needed, not only what it does.
 - Describe how you tested it: platform, Python version, commands.
-- Keep the PR green. CI runs lint, shell checks, tests on Python 3.10 to 3.13, and a packaging check.
+- Keep the PR green. CI runs lint, shell checks, tests on Python 3.10 to 3.14, and a packaging check.
 - Be responsive to review comments. Maintainers may push small fixes to your branch.
 
 ## Changelog

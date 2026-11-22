@@ -32,7 +32,7 @@ and this project adheres to semantic versioning.
 - `examples/` - `app.py` and `multi_module/` demo programs used by the docs and the tests
 - `.github/ISSUE_TEMPLATE/` - issue forms for bug reports, build failures, feature requests and documentation problems, plus `config.yml` with contact links
 - `.github/PULL_REQUEST_TEMPLATE.md`, `.github/CODEOWNERS`, `.github/dependabot.yml`, `.github/labeler.yml`, `.github/labels.yml`, `.github/release.yml` - repository automation and templates
-- `.github/workflows/ci.yml` - lint, shell script checks with an install/uninstall smoke test, tests on Python 3.10 to 3.13, and a packaging check
+- `.github/workflows/ci.yml` - lint, shell script checks with an install/uninstall smoke test, tests on Python 3.10 to 3.14, and a packaging check
 - `.github/workflows/codeql.yml`, `dependency-review.yml`, `labeler.yml`, `labels-sync.yml`, `stale.yml` - code scanning, dependency review, PR labeling, label sync and stale issue handling
 - `.github/workflows/release.yml` - verifies the tag against `VERSION`, runs the tests, builds distributions with `SHA256SUMS`, and publishes a GitHub Release using the matching CHANGELOG section
 - `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `ACCESSIBILITY.md`, `GOVERNANCE.md`, `PRIVACY.md` - community and policy documents
@@ -61,6 +61,7 @@ and this project adheres to semantic versioning.
 - `core/compiler.py` - the binary is compiled in a temp folder and moved to the output only on success
 - `core/codegen.py` - the real ZIP size is embedded in the C loader at build time
 - `core/config.py` - `bundle_stdlib` renamed to `bundle_deps`
+- `pyproject.toml` - Python 3.14 classifier (verified on Termux, aarch64, Python 3.14.10 with clang 21.1.8)
 - `pyproject.toml` - declares the MIT license and includes the LICENSE file in distributions
 - `pyproject.toml` - single version source: `core.cli.VERSION` (previously `pyproject` said 3.1.0 vs 2.0.0 in the code)
 - `pyproject.toml` - explicit `packages = ["core"]`
