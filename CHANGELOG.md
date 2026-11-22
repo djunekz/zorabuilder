@@ -75,6 +75,7 @@ and this project adheres to semantic versioning.
 - `core/codegen.py` - overly long temp paths were silently truncated; they are now checked
 - `core/codegen.py` - an unwritable or missing `TMPDIR` now falls back to `/tmp`
 - `core/codegen.py` - missing NULL checks on C API calls; all are checked now and init errors show the cause
+- `.github/workflows/dependency-review.yml` - the job is best-effort for pull requests opened by Dependabot (restricted token) and stays strict for everyone else
 - `.github/labels.yml` - the `stale` label color `795548` was read as a number, which made the label sync workflow fail; all colors are now quoted strings
 - `core/codegen.py` - the generated C source produced a `_GNU_SOURCE` redefinition warning with the Python 3.10 headers; it is now defined as `1` behind an `#ifndef` guard, which is silent with every Python version
 - `core/codegen.py` - Ctrl+C could not be caught by the script: the loader installed its own `SIGINT` handler before Python started, which stopped Python from installing its handler, so `except KeyboardInterrupt`, `finally` blocks and `atexit` callbacks never ran. `SIGINT` is now handed to Python, an uncaught `KeyboardInterrupt` exits with 130, and signals inherited as ignored (for example in background jobs) stay ignored
