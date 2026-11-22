@@ -15,7 +15,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Probe the dependency graph API
         id: probe
         env:
@@ -32,7 +32,7 @@ jobs:
           echo "status=${status}" >> "${GITHUB_OUTPUT}"
           echo "message=${message}" >> "${GITHUB_OUTPUT}"
           echo "Dependency graph API answered HTTP ${status} ${message}"
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/dependency-review-action@v5
         if: steps.probe.outputs.status == '200'
         with:
           fail-on-severity: moderate
