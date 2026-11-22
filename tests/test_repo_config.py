@@ -24,6 +24,16 @@ class LabelConfigTests(unittest.TestCase):
 
 
 class WorkflowConfigTests(unittest.TestCase):
+    def test_dependency_review_runs_only_after_a_successful_probe(self):
+        text = (WORKFLOWS / "dependency-review.yml").read_text()
+        self.assertIn("id: probe", text)
+        self.assertRegex(text, r"dependency-review-action@v\d+\n\s+if: steps\.probe\.outputs\.status == '200'")
+        self.assertIn("steps.probe.outputs.status != '200'", text)
+
+    def test_dependabot_updates_are_grouped(self):
+        text = (ROOT / ".github" / "dependabot.yml").read_text()
+        self.assertEqual(text.count("package-ecosystem:"), text.count("groups:"))
+
     def test_python_versions_are_quoted(self):
         text = (WORKFLOWS / "ci.yml").read_text()
         match = re.search(r"python-version: \[(.+)\]", text)
