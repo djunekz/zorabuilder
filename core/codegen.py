@@ -13,6 +13,7 @@ static const char BUNDLE[] =
 __BUNDLE_LITERAL__;
 
 static char g_tmpzip[1024];
+static struct sigaction g_old_sigint;
 
 static void zora_cleanup(void) {
     if (g_tmpzip[0] != '\0') unlink(g_tmpzip);
@@ -21,6 +22,18 @@ static void zora_cleanup(void) {
 static void zora_signal_handler(int sig) {
     zora_cleanup();
     _exit(128 + sig);
+}
+
+static void zora_install_handler(int sig, struct sigaction *previous) {
+    struct sigaction current;
+    struct sigaction ours;
+    memset(&ours, 0, sizeof(ours));
+    ours.sa_handler = zora_signal_handler;
+    sigemptyset(&ours.sa_mask);
+    if (sigaction(sig, NULL, &current) != 0) return;
+    if (previous) *previous = current;
+    if (current.sa_handler == SIG_IGN) return;
+    sigaction(sig, &ours, NULL);
 }
 
 static int b64val(unsigned char c) {
@@ -89,8 +102,10 @@ static int zora_py_fail(const char *what) {
 }
 
 int main(int argc, char *argv[]) {
-    signal(SIGINT, zora_signal_handler);
-    signal(SIGTERM, zora_signal_handler);
+    memset(&g_old_sigint, 0, sizeof(g_old_sigint));
+    g_old_sigint.sa_handler = SIG_DFL;
+    zora_install_handler(SIGINT, &g_old_sigint);
+    zora_install_handler(SIGTERM, NULL);
     atexit(zora_cleanup);
 
     size_t enc_len = 0;
@@ -129,6 +144,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    sigset_t sigint_set;
+    sigset_t previous_mask;
+    sigemptyset(&sigint_set);
+    sigaddset(&sigint_set, SIGINT);
+    sigprocmask(SIG_BLOCK, &sigint_set, &previous_mask);
+    sigaction(SIGINT, &g_old_sigint, NULL);
+
     PyConfig config;
     PyConfig_InitPythonConfig(&config);
     config.parse_argv = 0;
@@ -142,6 +164,7 @@ __ISOLATED_BLOCK__
 
     status = Py_InitializeFromConfig(&config);
     PyConfig_Clear(&config);
+    sigprocmask(SIG_SETMASK, &previous_mask, NULL);
     if (PyStatus_Exception(status)) {
         fprintf(stderr, "[zora] python init failed: %s\n", status.err_msg ? status.err_msg : "unknown error");
         return 1;
@@ -192,8 +215,9 @@ __ISOLATED_BLOCK__
 
     int exit_code = 0;
     if (!result) {
+        int interrupted = PyErr_ExceptionMatches(PyExc_KeyboardInterrupt);
         PyErr_Print();
-        exit_code = 1;
+        exit_code = interrupted ? 130 : 1;
     } else {
         Py_DECREF(result);
     }

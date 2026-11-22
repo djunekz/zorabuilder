@@ -6,8 +6,31 @@ build-backend = "setuptools.build_meta"
 name = "zora-builder"
 dynamic = ["version"]
 description = "Bundle a Python script into a standalone ELF binary for Termux/Android"
-requires-python = ">=3.10"
 readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "djunekz" }]
+keywords = ["python", "termux", "android", "elf", "bundler", "packager", "cli"]
+classifiers = [
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Build Tools",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.4"]
+
+[project.urls]
+Homepage = "https://github.com/djunekz/zorabuilder"
+Issues = "https://github.com/djunekz/zorabuilder/issues"
+Changelog = "https://github.com/djunekz/zorabuilder/blob/main/CHANGELOG.md"
 
 [project.scripts]
 zora = "core.cli:main"
@@ -17,4 +40,11 @@ zorabuilder = "core.cli:main"
 packages = ["core"]
 
 [tool.setuptools.dynamic]
-version = {attr = "core.cli.VERSION"}
+version = { attr = "core.cli.VERSION" }
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]

@@ -1,0 +1,78 @@
+name: Build failure
+description: The C compiler, the linker, or the build step fails
+title: "[Build]: "
+labels: ["build-failure", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when `zorabuilder` stops with `Compilation failed!`, a missing header, or a linker error.
+        Please run the checks in the first section before submitting.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Environment checks
+      description: Tick everything you verified.
+      options:
+        - label: "`pkg install python clang zlib` (Termux) or the equivalent packages are installed"
+        - label: "`python3 -c 'import sysconfig; print(sysconfig.get_paths()[\"include\"])'` points to a folder containing Python.h"
+        - label: I tried again with --no-optimize
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      render: shell
+      placeholder: zorabuilder app.py app --verbose
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Full output
+      description: Include the compiler error shown after "Compilation failed!".
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ZORA Builder version
+      placeholder: zorabuilder 2.1.0
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      description: Output of `python3 --version`.
+    validations:
+      required: true
+  - type: input
+    id: compiler
+    attributes:
+      label: Compiler version
+      description: Output of `clang --version` or `gcc --version`.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Termux (Android)
+        - Debian / Ubuntu
+        - Other Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: arch
+    attributes:
+      label: CPU architecture
+      description: Output of `uname -m`.
+      placeholder: aarch64
+  - type: textarea
+    id: generated
+    attributes:
+      label: Generated C source (optional)
+      description: Only if asked. Build with --keep-c and attach the .c file.

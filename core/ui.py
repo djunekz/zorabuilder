@@ -9,6 +9,12 @@ def _color_enabled() -> bool:
 
 
 _ON = _color_enabled()
+_BANNER_ENABLED = not os.environ.get("ZORA_NO_BANNER")
+
+
+def set_banner_enabled(value: bool):
+    global _BANNER_ENABLED
+    _BANNER_ENABLED = value
 
 
 def _code(value: str) -> str:
@@ -50,6 +56,11 @@ def die(msg):
 
 def banner(version, mode=None):
     c = Colors
+    if not _BANNER_ENABLED:
+        text = f"{c.GREEN}{c.BOLD}ZORA Builder v{version}{c.RESET}\n"
+        if mode:
+            text += f"{c.YELLOW}Mode:{c.RESET} {mode}\n"
+        return text
     bars = c.CYAN + ("━" * 42) + c.RESET
     text = (
         f"{c.RED}{c.BOLD}\n"

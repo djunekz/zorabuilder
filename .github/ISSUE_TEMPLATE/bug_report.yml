@@ -1,0 +1,102 @@
+name: Bug report
+description: Something in ZORA Builder or in a binary it produced does not work as documented
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+        Compilation errors have their own form: please use **Build failure** for those.
+        For security problems, do **not** open an issue. See SECURITY.md.
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before you start
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I read docs/TROUBLESHOOTING.md
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+      placeholder: When I run ... I get ... but I expected ...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The exact commands, starting from a clean directory if possible.
+      render: shell
+      placeholder: |
+        zorabuilder app.py app
+        ./app --flag
+    validations:
+      required: true
+  - type: textarea
+    id: script
+    attributes:
+      label: Minimal script
+      description: The smallest Python script that still shows the problem.
+      render: python
+  - type: textarea
+    id: output
+    attributes:
+      label: Output / error messages
+      description: Paste the full terminal output. Use --verbose if the scanner is involved.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ZORA Builder version
+      description: Output of `zorabuilder --version`.
+      placeholder: zorabuilder 2.1.0
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      description: Output of `python3 --version`.
+      placeholder: Python 3.12.7
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Termux (Android)
+        - Debian / Ubuntu
+        - Other Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: arch
+    attributes:
+      label: CPU architecture
+      description: Output of `uname -m`.
+      placeholder: aarch64
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where does it fail?
+      options:
+        - ZORA Builder itself (CLI, scanning, bundling)
+        - The built binary at runtime
+        - Installer / uninstaller
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?

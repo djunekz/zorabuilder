@@ -1,0 +1,51 @@
+name: Feature request
+description: Suggest an improvement or a new capability
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas are welcome. Please check docs/ROADMAP.md and existing issues first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do that is hard or impossible today?
+      placeholder: I want to ... but ...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How should it work? Sketch the command line or behavior you would expect.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds you tried, or other approaches.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI / help output
+        - Scanner (import detection)
+        - Bundler
+        - C loader (runtime behavior)
+        - Compiler / linking
+        - Installer
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to open a pull request for this

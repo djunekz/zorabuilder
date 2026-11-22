@@ -82,6 +82,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                      help="write a machine-readable build report to FILE")
     out.add_argument("--verbose", action="store_true",
                      help="show modules the scanner could not find")
+    out.add_argument("--no-banner", action="store_true",
+                     help="print a one-line title instead of the ASCII banner (env: ZORA_NO_BANNER)")
 
     other = p.add_argument_group("other")
     other.add_argument("-h", "--help", action="help", help="show this help message and exit")
@@ -202,6 +204,8 @@ def run(cfg: BuildConfig):
 
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else list(argv)
+    if "--no-banner" in argv:
+        ui.set_banner_enabled(False)
     parser = build_arg_parser()
     if not argv:
         parser.print_help()

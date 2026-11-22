@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/djunekz/zorabuilder/security/advisories/new
+    about: Report vulnerabilities privately. Please do not open a public issue.
+  - name: Conduct concern
+    url: https://github.com/djunekz/zorabuilder/blob/main/CODE_OF_CONDUCT.md#reporting
+    about: Report unacceptable behavior privately by email. Please do not open a public issue.
+  - name: Troubleshooting guide
+    url: https://github.com/djunekz/zorabuilder/blob/main/docs/TROUBLESHOOTING.md
+    about: Most build and runtime problems are covered here.
+  - name: FAQ
+    url: https://github.com/djunekz/zorabuilder/blob/main/docs/FAQ.md
+    about: Common questions about what ZORA Builder can and cannot do.
+  - name: Support
+    url: https://github.com/djunekz/zorabuilder/blob/main/SUPPORT.md
+    about: Where to ask for help.

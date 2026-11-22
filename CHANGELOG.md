@@ -24,6 +24,24 @@ and this project adheres to semantic versioning.
 - `core/ui.py` - colors are disabled automatically when output is not a terminal or `NO_COLOR` is set
 - `core/report.py` - JSON report now includes `version`, and its target folder is created automatically
 - `pyproject.toml` - new `zorabuilder` console command in addition to `zora`
+- `core/cli.py` - new `--no-banner` option, and `ZORA_NO_BANNER` environment variable, to print a one-line title instead of the ASCII banner
+- `install.sh` - installer for Termux and Debian/Ubuntu: installs system packages, copies ZORA Builder and creates the `zorabuilder` and `zora` launchers; supports `--prefix`, `--no-deps`, `--with-upx`, `--ref`, `--force`, runs from a checkout or via `curl | bash`
+- `uninstall.sh` - removes only what the installer created, asks for confirmation unless `--yes` is given, never touches built binaries or system packages
+- `requirements.txt`, `requirements-dev.txt` - dependency files (the builder itself has no runtime dependencies)
+- `tests/` - unittest suite covering the scanner, bundler, code generator, CLI and real end-to-end builds, including signal handling
+- `examples/` - `app.py` and `multi_module/` demo programs used by the docs and the tests
+- `.github/ISSUE_TEMPLATE/` - issue forms for bug reports, build failures, feature requests and documentation problems, plus `config.yml` with contact links
+- `.github/PULL_REQUEST_TEMPLATE.md`, `.github/CODEOWNERS`, `.github/dependabot.yml`, `.github/labeler.yml`, `.github/labels.yml`, `.github/release.yml` - repository automation and templates
+- `.github/workflows/ci.yml` - lint, shell script checks with an install/uninstall smoke test, tests on Python 3.10 to 3.13, and a packaging check
+- `.github/workflows/codeql.yml`, `dependency-review.yml`, `labeler.yml`, `labels-sync.yml`, `stale.yml` - code scanning, dependency review, PR labeling, label sync and stale issue handling
+- `.github/workflows/release.yml` - verifies the tag against `VERSION`, runs the tests, builds distributions with `SHA256SUMS`, and publishes a GitHub Release using the matching CHANGELOG section
+- `CODE_OF_CONDUCT.md`, `SECURITY.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `ACCESSIBILITY.md`, `GOVERNANCE.md`, `PRIVACY.md` - community and policy documents
+- `docs/` - `USAGE.md`, `TROUBLESHOOTING.md`, `FAQ.md`, `ARCHITECTURE.md`, `DEVELOPMENT.md`, `TESTING.md`, `RELEASING.md`, `ROADMAP.md`
+- `.gitignore`, `.gitattributes`, `.editorconfig` - repository hygiene
+- `pyproject.toml` - project metadata (authors, keywords, classifiers, URLs), `dev` extra and ruff configuration
+- `LICENSE` - MIT license (Copyright (c) 2026 djunekz)
+- `scripts/termux-check.sh` - device check that runs the release checklist on Termux or any Linux: environment, test suite, install, builds, argument pass-through, exit codes, Ctrl+C handling, temp file cleanup, reinstall and uninstall, with a PASS/FAIL summary and exit status
+- `CODE_OF_CONDUCT.md`, `SECURITY.md`, `SUPPORT.md`, `GOVERNANCE.md` - private contact by email for security reports and conduct concerns
 - `CHANGELOG.md` - this file
 
 ### Changed
@@ -43,9 +61,10 @@ and this project adheres to semantic versioning.
 - `core/compiler.py` - the binary is compiled in a temp folder and moved to the output only on success
 - `core/codegen.py` - the real ZIP size is embedded in the C loader at build time
 - `core/config.py` - `bundle_stdlib` renamed to `bundle_deps`
+- `pyproject.toml` - declares the MIT license and includes the LICENSE file in distributions
 - `pyproject.toml` - single version source: `core.cli.VERSION` (previously `pyproject` said 3.1.0 vs 2.0.0 in the code)
 - `pyproject.toml` - explicit `packages = ["core"]`
-- `README.md` - rewritten in English to match the current structure and behavior
+- `README.md` - rewritten with installation options, usage, option reference, real output samples, architecture overview, limitations and a documentation index
 
 ### Fixed
 - `core/codegen.py` - binary arguments were parsed as Python interpreter options: `sys.argv` was corrupted and `-h`, `--version`, `-c` printed Python's help/version or failed to initialize (now `parse_argv = 0`)
@@ -54,6 +73,7 @@ and this project adheres to semantic versioning.
 - `core/codegen.py` - overly long temp paths were silently truncated; they are now checked
 - `core/codegen.py` - an unwritable or missing `TMPDIR` now falls back to `/tmp`
 - `core/codegen.py` - missing NULL checks on C API calls; all are checked now and init errors show the cause
+- `core/codegen.py` - Ctrl+C could not be caught by the script: the loader installed its own `SIGINT` handler before Python started, which stopped Python from installing its handler, so `except KeyboardInterrupt`, `finally` blocks and `atexit` callbacks never ran. `SIGINT` is now handed to Python, an uncaught `KeyboardInterrupt` exits with 130, and signals inherited as ignored (for example in background jobs) stay ignored
 - `core/cli.py` - `zorabuilder app.py app.py` overwrote the source script with an ELF
 - `core/cli.py` - the banner always printed `Mode: Full Bundle` even with `--no-bundle`
 - `core/compiler.py` - `--keep-c` used `with_suffix(".c")`, so `app.c` overwrote the binary and `my.app` became `my.c`; it now saves `<output>.c` and keeps it even if compilation fails

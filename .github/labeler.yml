@@ -1,0 +1,30 @@
+cli:
+  - changed-files:
+      - any-glob-to-any-file: ["core/cli.py", "core/ui.py", "core/config.py", "core/report.py", "zorabuilder.py"]
+scanner:
+  - changed-files:
+      - any-glob-to-any-file: ["core/scanner.py"]
+bundler:
+  - changed-files:
+      - any-glob-to-any-file: ["core/bundler.py"]
+loader:
+  - changed-files:
+      - any-glob-to-any-file: ["core/codegen.py"]
+compiler:
+  - changed-files:
+      - any-glob-to-any-file: ["core/compiler.py"]
+installer:
+  - changed-files:
+      - any-glob-to-any-file: ["install.sh", "uninstall.sh", "scripts/**"]
+tests:
+  - changed-files:
+      - any-glob-to-any-file: ["tests/**"]
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: ["**/*.md", "docs/**"]
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**"]
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: ["requirements*.txt", "pyproject.toml"]

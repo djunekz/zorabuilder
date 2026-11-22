@@ -1,0 +1,72 @@
+- name: bug
+  color: d73a4a
+  description: Something is not working
+- name: build-failure
+  color: b60205
+  description: Compiler, linker or build step fails
+- name: enhancement
+  color: a2eeef
+  description: New feature or improvement
+- name: documentation
+  color: 0075ca
+  description: Documentation changes
+- name: needs-triage
+  color: fbca04
+  description: Waiting for a maintainer to look at it
+- name: good first issue
+  color: 7057ff
+  description: Good for newcomers
+- name: help wanted
+  color: 008672
+  description: Extra attention is needed
+- name: question
+  color: d876e3
+  description: Further information is requested
+- name: wontfix
+  color: ffffff
+  description: This will not be worked on
+- name: duplicate
+  color: cfd3d7
+  description: Already reported
+- name: breaking
+  color: e99695
+  description: Changes CLI flags, output or runtime behavior
+- name: security
+  color: ee0701
+  description: Security related
+- name: dependencies
+  color: 0366d6
+  description: Dependency updates
+- name: skip-changelog
+  color: ededed
+  description: Exclude from generated release notes
+- name: stale
+  color: 795548
+  description: No recent activity
+- name: pinned
+  color: 1d76db
+  description: Never mark as stale
+- name: cli
+  color: c5def5
+  description: Command line interface and output
+- name: scanner
+  color: c5def5
+  description: Import detection
+- name: bundler
+  color: c5def5
+  description: ZIP and payload creation
+- name: loader
+  color: c5def5
+  description: Generated C loader and runtime behavior
+- name: compiler
+  color: c5def5
+  description: Compilation and linking
+- name: installer
+  color: c5def5
+  description: install.sh and uninstall.sh
+- name: tests
+  color: c5def5
+  description: Test suite
+- name: ci
+  color: c5def5
+  description: Workflows and automation
