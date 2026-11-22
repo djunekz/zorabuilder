@@ -11,13 +11,36 @@ jobs:
     name: Dependency review
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
     permissions:
       contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+      - name: Probe the dependency graph API
+        id: probe
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          status="$(curl -sS -o response.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/dependency-graph/compare/${BASE_SHA}...${HEAD_SHA}")" || status="000"
+          message="$(python3 -c 'import json; d = json.load(open("response.json")); print(d.get("message", "") if isinstance(d, dict) else "")' 2>/dev/null || true)"
+          echo "status=${status}" >> "${GITHUB_OUTPUT}"
+          echo "message=${message}" >> "${GITHUB_OUTPUT}"
+          echo "Dependency graph API answered HTTP ${status} ${message}"
       - uses: actions/dependency-review-action@v4
+        if: steps.probe.outputs.status == '200'
         with:
           fail-on-severity: moderate
           comment-summary-in-pr: on-failure
+      - name: Report that the review was skipped
+        if: steps.probe.outputs.status != '200'
+        env:
+          STATUS: ${{ steps.probe.outputs.status }}
+          MESSAGE: ${{ steps.probe.outputs.message }}
+        run: |
+          echo "::warning title=Dependency review skipped::GitHub answered HTTP ${STATUS} (${MESSAGE}). See docs/RELEASING.md, section on Dependency review."
