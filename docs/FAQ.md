@@ -20,7 +20,7 @@ Linux, with Termux on Android as the primary target. Any system with Python 3.10
 
 ### Which Python versions?
 
-The builder requires Python 3.10 or newer. The binary uses the Python version that built it. CI tests 3.10, 3.11, 3.12 and 3.13.
+The builder requires Python 3.10 or newer. The binary uses the Python version that built it. CI tests 3.10, 3.11, 3.12, 3.13 and 3.14, and the device check has passed on Termux with Python 3.14.
 
 ## Comparisons and expectations
 

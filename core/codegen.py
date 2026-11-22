@@ -1,4 +1,6 @@
-C_TEMPLATE = r"""#define _GNU_SOURCE
+C_TEMPLATE = r"""#ifndef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#endif
 #include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
