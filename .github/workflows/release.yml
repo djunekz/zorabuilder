@@ -52,18 +52,20 @@ jobs:
             exit 1
           fi
           cat release-notes.md
-      - name: Build distributions
+      - name: Build the source archive and its checksum
         run: |
-          python -m pip install build
-          python -m build
+          mkdir -p dist
           git archive --format=tar.gz --prefix="zorabuilder-${TAG}/" -o "dist/zorabuilder-${TAG}.tar.gz" "${TAG}"
           cd dist
-          sha256sum * > SHA256SUMS
-          cat SHA256SUMS
+          sha256sum "zorabuilder-${TAG}.tar.gz" > "zorabuilder-${TAG}.tar.gz.sha256sum"
+          sha256sum --check "zorabuilder-${TAG}.tar.gz.sha256sum"
+          ls -l
       - uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.TAG }}
-          name: ${{ env.TAG }}
+          name: ZoraBuilder ${{ env.TAG }}
           body_path: release-notes.md
+          fail_on_unmatched_files: true
           files: |
-            dist/*
+            dist/zorabuilder-${{ env.TAG }}.tar.gz
+            dist/zorabuilder-${{ env.TAG }}.tar.gz.sha256sum

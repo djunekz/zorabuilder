@@ -23,6 +23,27 @@ class LabelConfigTests(unittest.TestCase):
             self.assertLessEqual(len(description), 100, description)
 
 
+class ReleaseWorkflowTests(unittest.TestCase):
+    def setUp(self):
+        self.text = (WORKFLOWS / "release.yml").read_text()
+
+    def test_release_attaches_only_the_archive_and_its_checksum(self):
+        self.assertIn("dist/zorabuilder-${{ env.TAG }}.tar.gz\n", self.text)
+        self.assertIn("dist/zorabuilder-${{ env.TAG }}.tar.gz.sha256sum", self.text)
+        self.assertNotIn("dist/*", self.text)
+        self.assertNotIn("SHA256SUMS", self.text)
+        self.assertNotIn("python -m build", self.text)
+
+    def test_release_title_is_zorabuilder_followed_by_the_tag(self):
+        self.assertIn("name: ZoraBuilder ${{ env.TAG }}", self.text)
+
+    def test_release_fails_when_an_asset_is_missing(self):
+        self.assertIn("fail_on_unmatched_files: true", self.text)
+
+    def test_checksum_is_verified_before_publishing(self):
+        self.assertIn('sha256sum --check "zorabuilder-${TAG}.tar.gz.sha256sum"', self.text)
+
+
 class WorkflowConfigTests(unittest.TestCase):
     def test_dependency_review_runs_only_after_a_successful_probe(self):
         text = (WORKFLOWS / "dependency-review.yml").read_text()

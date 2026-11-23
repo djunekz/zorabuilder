@@ -9,6 +9,20 @@ and this project adheres to semantic versioning.
 
 ---
 
+## [v2.1.1] - 2026-11-23
+
+### Added
+- `README.md` - new "Verify a release download" section with the commands to download, check and install a release archive
+
+### Changed
+- `.github/workflows/release.yml` - a release now carries exactly two assets: `zorabuilder-vX.Y.Z.tar.gz` and a matching `zorabuilder-vX.Y.Z.tar.gz.sha256sum` that `sha256sum -c` can check directly; the wheel, the second source distribution and the combined `SHA256SUMS` file are no longer attached (the packaging check stays in CI)
+- `.github/workflows/release.yml` - the release fails if either asset is missing
+- `.github/workflows/release.yml` - the release title is now `ZoraBuilder vX.Y.Z` instead of the bare tag
+- `docs/RELEASING.md`, `SECURITY.md` - describe the new assets and the verification steps
+- `core/cli.py` - version 2.1.1
+
+---
+
 ## [v2.1.0] - 2026-11-23
 
 ### Added

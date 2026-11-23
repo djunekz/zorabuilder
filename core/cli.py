@@ -12,7 +12,7 @@ from .codegen import generate_c_stub
 from .compiler import build_elf, detect_prefix
 from .report import print_report, write_json_report
 
-VERSION = "2.1.0"
+VERSION = "2.1.1"
 PROG = "zorabuilder"
 
 EXAMPLES = f"""examples:

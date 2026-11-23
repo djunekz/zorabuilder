@@ -77,7 +77,7 @@ Knowing what ZORA Builder does **not** protect is part of using it safely.
 - Build from a clean virtual environment or a fresh Termux install
 - Pin and review third-party dependencies before bundling them
 - Use `--isolated` for binaries you distribute
-- Verify downloads against the `SHA256SUMS` file attached to each release
+- Verify release downloads against the `.sha256sum` file attached to each release (see "Verify a release download" in the [README](README.md#verify-a-release-download))
 - Treat the built binary as readable source, not as a secret store
 
 ## Disclosure

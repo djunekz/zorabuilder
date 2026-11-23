@@ -65,8 +65,8 @@ When the status is 200, the real review runs and fails the pull request on findi
    git push origin v2.2.0
    ```
 
-8. **Watch the Release workflow.** It checks that the tag matches `VERSION`, runs the tests, extracts the notes from the changelog, builds the wheel and sdist, creates a source archive, writes `SHA256SUMS`, and publishes a GitHub Release.
-9. **Verify the release page:** notes look right, assets and `SHA256SUMS` are attached, and `install.sh --ref v2.2.0` works on a clean machine.
+8. **Watch the Release workflow.** It checks that the tag matches `VERSION`, runs the tests, extracts the notes from the changelog, creates the source archive `zorabuilder-vX.Y.Z.tar.gz` with a matching `zorabuilder-vX.Y.Z.tar.gz.sha256sum`, and publishes a GitHub Release with exactly those two files. GitHub adds its own `Source code` archives and, for immutable releases, a release attestation; those cannot be removed.
+9. **Verify the release page:** the title reads `ZoraBuilder vX.Y.Z`, notes look right, the two assets are attached and `sha256sum -c zorabuilder-vX.Y.Z.tar.gz.sha256sum` passes after downloading them, and `install.sh --ref v2.2.0` works on a clean machine.
 10. **Announce** if appropriate.
 
 ## If the workflow fails

@@ -138,6 +138,22 @@ cd zorabuilder
 python3 -m pip install .
 ```
 
+### Verify a release download
+
+Each [release](https://github.com/djunekz/zorabuilder/releases) has two assets: the source archive and its checksum. Download both, check, then install:
+
+```bash
+VERSION=v2.1.1
+BASE=https://github.com/djunekz/zorabuilder/releases/download/$VERSION
+curl -fsSLO "$BASE/zorabuilder-$VERSION.tar.gz"
+curl -fsSLO "$BASE/zorabuilder-$VERSION.tar.gz.sha256sum"
+sha256sum -c "zorabuilder-$VERSION.tar.gz.sha256sum"
+tar -xzf "zorabuilder-$VERSION.tar.gz"
+cd "zorabuilder-$VERSION" && ./install.sh
+```
+
+`sha256sum -c` prints `OK` when the archive matches. If it prints `FAILED`, do not use the file.
+
 ### Uninstall
 
 ```bash
